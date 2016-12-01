@@ -41,7 +41,7 @@
     <h3> Select File </h3>
     <form action="select" method="post">
         <select name="selected_file">
-            {% for file in content %}
+            {% for file in content['upload'] %}
             <option value="{{ file }}">{{ file }}</option>
                 <tr>
                     <th>{{ file }}</th>
@@ -56,25 +56,56 @@
     {% if session['selected_file'] %}
     <p>Selected file {{ session['selected_file'] }}</p>
     {% endif %}
+
     {% if session['col_names'] %}
-        <p>Column Headers</p>
-        <table border="1">
-            {% for col in session['col_names'] %}
-            <tr>
-                <th>
-                    {{ col }}
-                </th>
-                <th>
-                    Moving Average
-                    <select>
-                        <option value="None">None</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                    </select>
-                </th>
-            </tr>
+        <form action="process" method="post">
+            <h3>Dataset Info</h3>
+            <table border="1">
+                <tr>
+                    <th>
+                        Column Name
+                    </th>
+                    <th>
+                        MA
+                    </th>
+                    <th>
+                        MSD
+                    </th>
+                </tr>
+                {% for col in session['col_names'] %}
+                <tr>
+                    <td>
+                        {{ col }}
+                    </td>
+                    <!-- beg: Feature engineering functionality -->
+                    <td>
+                        <select name="{{ col }}_ma">
+                            <option value=0>None</option>
+                            <option value=5>5</option>
+                            <option value=10>10</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="{{ col }}_ms">
+                            <option value=0>None</option>
+                            <option value=5>5</option>
+                            <option value=10>10</option>
+                        </select>
+                    </td>
+                    <!-- eof: Feature engineering functionality -->
+                </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+</div>
+<div>
+    <h3> Output files </h3>
+    {% if content is defined %}
+        {% for file in content['output'] %}
+            <a href="download/{{ file }}">{{ file }}</a><br>
             {% endfor %}
-        </table>
     {% endif %}
 </div>
 <!--
