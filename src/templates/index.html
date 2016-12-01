@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title> .::. Micro ML .::.</title>
+</head>
+
+<body>
+<h1 align="center"> Micro ML </h1>
+
+<div id="upload_file" align="left">
+    <h3> Upload Your .csv file</h3>
+    <form action="upload" method="post" enctype=multipart/form-data>
+        <table>
+            <tr>
+                <th>
+                    <input type="file" name="file">
+                </th>
+                <th>
+                    <input type="submit" value="Upload">
+                </th>
+            </tr>
+        </table>
+    </form>
+
+
+</div>
+
+<div id="upload_directory">
+    {% if content is defined %}
+        <!--
+        <h3> Upload folder </h3>
+        <table border="1">
+            {% for file in content %}
+                <tr>
+                    <th>{{ file }}</th>
+                </tr>
+            {% endfor %}
+        </table>
+        -->
+    <h3> Select File </h3>
+    <form action="select" method="post">
+        <select name="selected_file">
+            {% for file in content %}
+            <option value="{{ file }}">{{ file }}</option>
+                <tr>
+                    <th>{{ file }}</th>
+                </tr>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Start Process">
+    </form>
+    {% endif %}
+</div>
+<div>
+    {% if session['selected_file'] %}
+    <p>Selected file {{ session['selected_file'] }}</p>
+    {% endif %}
+    {% if session['col_names'] %}
+        <p>Column Headers</p>
+        <table border="1">
+            {% for col in session['col_names'] %}
+            <tr>
+                <th>
+                    {{ col }}
+                </th>
+                <th>
+                    Moving Average
+                    <select>
+                        <option value="None">None</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                </th>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+</div>
+<!--
+<div>
+    {% if request.args.get('select') is defined %}
+    <p>Selected file {{ request.args.get('select') }}</p>
+    {% endif %}
+</div>
+-->
+
+</body>
+</html>
