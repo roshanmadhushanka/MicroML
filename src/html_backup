@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title> .::. Micro ML .::.</title>
+</head>
+
+<body>
+<h1 align="center"> Micro ML </h1>
+
+<div id="upload_file" align="left">
+    <h3> Upload Your .csv file</h3>
+    <form action="upload" method="post" enctype=multipart/form-data>
+        <table>
+            <tr>
+                <th>
+                    <input type="file" name="file">
+                </th>
+                <th>
+                    <input type="submit" value="Upload">
+                </th>
+            </tr>
+        </table>
+    </form>
+
+
+</div>
+
+<div id="upload_directory">
+    {% if content is defined %}
+        <!--
+        <h3> Upload folder </h3>
+        <table border="1">
+            {% for file in content %}
+                <tr>
+                    <th>{{ file }}</th>
+                </tr>
+            {% endfor %}
+        </table>
+        -->
+    <h3> Select File </h3>
+    <form action="select" method="post">
+        <select name="selected_file">
+            {% for file in content['upload'] %}
+            <option value="{{ file }}">{{ file }}</option>
+                <tr>
+                    <th>{{ file }}</th>
+                </tr>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Start Process">
+    </form>
+    {% endif %}
+</div>
+<div>
+    {% if session['selected_file'] %}
+    <p>Selected file {{ session['selected_file'] }}</p>
+    {% endif %}
+
+    {% if session['col_names'] %}
+        <form action="process" method="post">
+            <h3>Dataset Info</h3>
+            <table border="1">
+                <tr>
+                    <th>
+                        Column Name
+                    </th>
+                    <th>
+                        MA
+                    </th>
+                    <th>
+                        MSD
+                    </th>
+                </tr>
+                {% for col in session['col_names'] %}
+                <tr>
+                    <td>
+                        {{ col }}
+                    </td>
+                    <!-- beg: Feature engineering functionality -->
+                    <td>
+                        <input type="text" name="{{ col }}_ma" value="0">
+                        <!--
+                        <select name="{{ col }}_ma">
+                            <option value=0>None</option>
+                            <option value=5>5</option>
+                            <option value=10>10</option>
+                        </select>
+                        -->
+                    </td>
+                    <td>
+                        <input type="text" name="{{ col }}_ms" value="0">
+                        <!--
+                        <select name="{{ col }}_ms">
+                            <option value=0>None</option>
+                            <option value=5>5</option>
+                            <option value=10>10</option>
+                        </select>
+                        -->
+                    </td>
+                    <!-- eof: Feature engineering functionality -->
+                </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+</div>
+<div>
+    <h3> Output files </h3>
+    {% if content is defined %}
+        {% for file in content['output'] %}
+            <a href="download/{{ file }}">{{ file }}</a><br>
+            {% endfor %}
+    {% endif %}
+</div>
+<!--
+<div>
+    {% if request.args.get('select') is defined %}
+    <p>Selected file {{ request.args.get('select') }}</p>
+    {% endif %}
+</div>
+-->
+
+</body>
+</html>
